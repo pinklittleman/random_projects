@@ -47,7 +47,7 @@ function generate(){
     gen++
     console.log(gen)
     points.forEach(point => {
-        if(gen == point.generation){
+        if(gen >= point.generation){
             new Point(point.x+randnum(10), gen*10, gen)
         }
     });
