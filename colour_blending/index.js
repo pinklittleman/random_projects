@@ -20,16 +20,17 @@ class Point{
     }
 }
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 600; i++) {
     new Point(randnum(canvas.width), 10, 1)
 }
 
 
 function mainLoop(){
-    ctx.clearRect(0,0, canvas.width, canvas.height)
+    // ctx.clearRect(0,0, canvas.width, canvas.height)
 
     points.forEach(point => {
         point.draw()
+        generate()
     });
 
     requestAnimationFrame(mainLoop)
@@ -44,10 +45,14 @@ function randnum(num){
 }
 
 function generate(){
+    if (gen*10 >= canvas.height-5) {
+        // new Point(randnum(canvas.width), 10, 1)
+        return
+    }
+    let ogGen = gen
     gen++
-    console.log(gen)
     points.forEach(point => {
-        if(gen >= point.generation){
+        if(point.generation >= ogGen){
             new Point(point.x+randnum(10), gen*10, gen)
         }
     });
