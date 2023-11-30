@@ -20,7 +20,7 @@ class Point{
     }
 }
 
-for (let i = 0; i < 600; i++) {
+for (let i = 0; i < 60; i++) {
     new Point(randnum(canvas.width), 10, 1)
 }
 
@@ -31,8 +31,8 @@ function mainLoop(){
     points.forEach(point => {
         point.draw()
         generate()
-    });
-
+    })
+    
     requestAnimationFrame(mainLoop)
 }
 

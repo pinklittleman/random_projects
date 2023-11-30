@@ -1,0 +1,13 @@
+body{
+    background-color: rgb(12, 12, 12);
+    margin: 0;
+    overflow: hidden;
+}
+
+.button1{
+    position: absolute;
+    top: 100px;
+    left: 200px;
+}
+
+/* Did I ever tell you the definition of insanity? */
