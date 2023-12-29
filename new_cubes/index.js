@@ -47,7 +47,7 @@ let tiles = [
 
 let center = []
 
-//  just witchcraft 
+//  just witchcraft. Next automate this ^^^^^^
 let based = 2
 for (let i = 1; i < tiles.length+1; i++) {
     for (let j = 0; j < tiles.length; j++) {
