@@ -4,7 +4,7 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 100, mouseX = 0, mouseY = 0
+let tile_size = 100, mouseX = 0, mouseY = 0, activeTile = null
 
 let world = []
 
@@ -41,6 +41,11 @@ class Tile{
         this.RX = randnum(3)
         this.RY = randnum(3)
         this.num = null
+        this.middleX = centerX+tile_size/2
+        this.middleY = centerY-tile_size/2
+        this.distanceW = null
+        this.distanceH = null
+        this.hypot = null
         tiles.push(this)
     }
     // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
@@ -63,6 +68,13 @@ class Tile{
             based = 0
         }
         based++
+        this.distanceW = this.middleX - mouseX
+        this.distanceH = this.middleY - mouseY
+        this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
+        if(this.hypot < 2550){
+            ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+            activeTile = this
+        }
     }
     }
 
