@@ -67,7 +67,9 @@ class Tile{
     }
 
 }
-
+this.angle = null
+        this.velX = null
+        this.velY = null
 let centers = []
 
 // creates a small 1x1 pixel for seeds that will come later
@@ -107,7 +109,7 @@ function mainLoop(){
     // this is just brain damage, calling a foreach loop wich feeds into two more for loops
     tiles.forEach(tile =>{
         tile.draw()
-        ctx.fillText(`${tile.velX}\n${tile.velY}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
+        ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
     })
 
     requestAnimationFrame(mainLoop)
