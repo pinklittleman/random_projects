@@ -15,19 +15,19 @@ let trees = {
     4:{Hchestnut: []}
 }
 
-let tile_X_calculation = Math.floor(canvas.width/tile_size)-2
-// let tile_X_remainder = (canvas.width%tile_size)
-// let tile_X_new_remainder = canvas.width/tile_X_remainder
-// let tile_X_displace_ammount = (tile_X_new_remainder/2)
-// let final_X_tile_displace = tile_X_displace_ammount/tile_X_calculation
+// holy moly that was simpler than I thought it would be, turns out you should times the X calc by the tile size not 10 
+let halfCanvasW = canvas.width/2
+let tile_X_calculation = 3//Math.floor(canvas.width/tile_size)-2
+let left_X_ajustment = halfCanvasW-tile_X_calculation/2*tile_size
 
-let tile_Y_calculation = Math.floor(canvas.height/tile_size)-1
-// let tile_Y_remainder = (canvas.height%tile_size)*10
-// let tile_Y_displace_ammount = tile_Y_remainder/2
-// let final_Y_tile_displace = tile_Y_displace_ammount/tile_X_calculation
+let halfCanvasH = canvas.height/2
+let tile_Y_calculation = 3//Math.floor(canvas.width/tile_size)-2
+let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
 
 let tiles = []
 
+
+// bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
 class Tile{
     constructor(centerX,centerY){
         this.centerX = centerX
@@ -40,10 +40,14 @@ class Tile{
         }
         this.RX = randnum(3)
         this.RY = randnum(3)
+        this.num = null
         tiles.push(this)
     }
+    // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
+    // might need to migrate this back to the draw loop outside the tile.
     draw() {
         let based = 2
+        this.num = tiles.indexOf(this)
         for (let i = 1; i < 5; i++) {
             for (let j = 0; j < tiles.length; j++) {
                 ctx.beginPath()
@@ -53,8 +57,8 @@ class Tile{
                 ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
                 ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
                 ctx.stroke()
-            //  ctx.fillText(`${based}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
-        }
+                // ctx.fillText(`${this.num}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
+            }
         if (based >= 4){
             based = 0
         }
@@ -66,6 +70,7 @@ class Tile{
 
 let centers = []
 
+// creates a small 1x1 pixel for seeds that will come later
 class seed{
     constructor(x,y){
         this.tree_type = null
@@ -87,18 +92,22 @@ class seed{
 
 for (let y = 0; y < tile_Y_calculation; y++) {
    for (let x = 0; x < tile_X_calculation; x++) {
-        new Tile(x*tile_size*1,(y*tile_size+tile_size)*1)
+        new Tile((x*tile_size)+left_X_ajustment,(y*tile_size+tile_size)+left_Y_ajustment)
    }
 }
 
 function mainLoop(){
     ctx.clearRect(0,0,canvas.width,canvas.height)
-    // this is just drawing 
+
+    // this draws the seeds in the world
     world.forEach(item => {
         item.draw()
     });
+    
+    // this is just brain damage, calling a foreach loop wich feeds into two more for loops
     tiles.forEach(tile =>{
         tile.draw()
+        ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
     })
 
     requestAnimationFrame(mainLoop)
