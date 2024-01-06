@@ -103,11 +103,11 @@ function mainLoop(){
     world.forEach(item => {
         item.draw()
     });
-    
+
     // this is just brain damage, calling a foreach loop wich feeds into two more for loops
     tiles.forEach(tile =>{
         tile.draw()
-        ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
+        ctx.fillText(`${tile.velX}\n${tile.velY}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
     })
 
     requestAnimationFrame(mainLoop)
