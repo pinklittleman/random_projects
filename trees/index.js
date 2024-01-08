@@ -79,10 +79,6 @@ class Tile{
     }
 
 }
-this.angle = null
-        this.velX = null
-        this.velY = null
-let centers = []
 
 // creates a small 1x1 pixel for seeds that will come later
 class seed{
