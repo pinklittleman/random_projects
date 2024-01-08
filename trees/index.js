@@ -38,8 +38,6 @@ class Tile{
             3:{x:this.centerX,y:this.centerY},
             4:{x:this.centerX+tile_size,y:this.centerY},
         }
-        this.RX = randnum(3)
-        this.RY = randnum(3)
         this.num = null
         this.middleX = centerX+tile_size/2
         this.middleY = centerY-tile_size/2
@@ -71,7 +69,7 @@ class Tile{
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
-        if(this.hypot < 2550){
+        if(Math.sqrt(this.hypot) < tile_size/2){
             ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
             activeTile = this
         }
@@ -134,7 +132,9 @@ function randnum(num){
 canvas.addEventListener("mousemove", event =>{
     mouseX = event.clientX
     mouseY = event.clientY
-    new seed(randnum(canvas.width), randnum(canvas.height))
+    if(activeTile != null){
+        new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size))
+    }
 })
 
 window.addEventListener("resize", event =>{
