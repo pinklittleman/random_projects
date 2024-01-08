@@ -4,7 +4,7 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 100, mouseX = 0, mouseY = 0, activeTile = null
+let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null
 
 let world = []
 
@@ -67,17 +67,24 @@ class Tile{
         if (based >= 4){
             based = 0
         }
-        based++
+            based++
+        }
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
-        if(Math.sqrt(this.hypot) < tile_size/2){
-            ctx.fillStyle = "rgba(220,20,20,0.1)"
-            ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
-            ctx.fillStyle = "rgba(255,255,255,0.8)"
-            activeTile = this
+            if(Math.sqrt(this.hypot) < tile_size/2){
+                ctx.fillStyle = "rgba(220,20,20,0.1)"
+                ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+                ctx.fillStyle = "rgba(255,255,255,0.8)"
+                activeTile = this
         }
-    }
+        this.dic = {
+            1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
+            2:{x:this.centerX,y:this.centerY-tile_size},
+            3:{x:this.centerX,y:this.centerY},
+            4:{x:this.centerX+tile_size,y:this.centerY},
+        }
+
     }
 
 }
@@ -114,7 +121,7 @@ function mainLoop(){
     // this draws the seeds in the world
     world.forEach(item => {
         item.draw()
-        setInterval(() => {
+        setTimeout(() => {
             item.age++
         }, 1000*randnum(200));
     });
@@ -145,6 +152,10 @@ canvas.addEventListener("mousemove", event => {
         }
     }
 })
+
+function increaseTile(){
+    tile_size++
+}
 
 window.addEventListener("resize", event => {
     canvas.width = innerWidth
