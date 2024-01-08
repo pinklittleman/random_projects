@@ -39,6 +39,8 @@ class Tile{
             4:{x:this.centerX+tile_size,y:this.centerY},
         }
         this.num = null
+        this.maxSeeds = randnum(5)
+        this.seeds = []
         this.middleX = centerX+tile_size/2
         this.middleY = centerY-tile_size/2
         this.distanceW = null
@@ -70,7 +72,9 @@ class Tile{
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
         if(Math.sqrt(this.hypot) < tile_size/2){
+            ctx.fillStyle = "rgba(220,20,20,0.1)"
             ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+            ctx.fillStyle = "rgba(255,255,255,0.8)"
             activeTile = this
         }
     }
@@ -110,6 +114,9 @@ function mainLoop(){
     // this draws the seeds in the world
     world.forEach(item => {
         item.draw()
+        setInterval(() => {
+            item.age++
+        }, 1000*randnum(200));
     });
 
     // this is just brain damage, calling a foreach loop wich feeds into two more for loops
@@ -129,15 +136,17 @@ function randnum(num){
     return ran
 }
 
-canvas.addEventListener("mousemove", event =>{
+canvas.addEventListener("mousemove", event => {
     mouseX = event.clientX
     mouseY = event.clientY
     if(activeTile != null){
-        new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size))
+        if(activeTile.seeds.length <= activeTile.maxSeeds){
+            activeTile.seeds.push(new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size)))
+        }
     }
 })
 
-window.addEventListener("resize", event =>{
+window.addEventListener("resize", event => {
     canvas.width = innerWidth
     canvas.height = innerHeight
 })
