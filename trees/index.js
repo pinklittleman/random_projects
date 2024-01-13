@@ -51,6 +51,12 @@ class Tile{
     // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
     // might need to migrate this back to the draw loop outside the tile.
     draw() {
+        this.dic = {
+            1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
+            2:{x:this.centerX,y:this.centerY-tile_size},
+            3:{x:this.centerX,y:this.centerY},
+            4:{x:this.centerX+tile_size,y:this.centerY},
+        }
         let based = 2
         this.num = tiles.indexOf(this)
         for (let i = 1; i < 5; i++) {
@@ -77,12 +83,6 @@ class Tile{
                 ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
                 ctx.fillStyle = "rgba(255,255,255,0.8)"
                 activeTile = this
-        }
-        this.dic = {
-            1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
-            2:{x:this.centerX,y:this.centerY-tile_size},
-            3:{x:this.centerX,y:this.centerY},
-            4:{x:this.centerX+tile_size,y:this.centerY},
         }
 
     }
