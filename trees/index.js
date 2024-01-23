@@ -51,39 +51,39 @@ class Tile{
     // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
     // might need to migrate this back to the draw loop outside the tile.
     draw() {
-        this.dic = {
-            1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
-            2:{x:this.centerX,y:this.centerY-tile_size},
-            3:{x:this.centerX,y:this.centerY},
-            4:{x:this.centerX+tile_size,y:this.centerY},
-        }
-        let based = 2
-        this.num = tiles.indexOf(this)
-        for (let i = 1; i < 5; i++) {
-            for (let j = 0; j < tiles.length; j++) {
-                ctx.beginPath()
-                ctx.strokeStyle = "rgb(200,10,10)"
-                ctx.fillStyle = "rgb(250,250,150)"
-                ctx.lineWidth = 2
-                ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
-                ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
-                ctx.stroke()
-                // ctx.fillText(`${this.num}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
-            }
-        if (based >= 4){
-            based = 0
-        }
-            based++
-        }
-        this.distanceW = this.middleX - mouseX
-        this.distanceH = this.middleY - mouseY
-        this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
-            if(Math.sqrt(this.hypot) < tile_size/2){
-                ctx.fillStyle = "rgba(220,20,20,0.1)"
-                ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
-                ctx.fillStyle = "rgba(255,255,255,0.8)"
-                activeTile = this
-        }
+        // this.dic = {
+        //     1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
+        //     2:{x:this.centerX,y:this.centerY-tile_size},
+        //     3:{x:this.centerX,y:this.centerY},
+        //     4:{x:this.centerX+tile_size,y:this.centerY},
+        // }
+        // let based = 2
+        // this.num = tiles.indexOf(this)
+        // for (let i = 1; i < 5; i++) {
+        //     for (let j = 0; j < tiles.length; j++) {
+        //         ctx.beginPath()
+        //         ctx.strokeStyle = "rgb(200,10,10)"
+        //         ctx.fillStyle = "rgb(250,250,150)"
+        //         ctx.lineWidth = 2
+        //         ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
+        //         ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
+        //         ctx.stroke()
+        //         // ctx.fillText(`${this.num}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
+        //     }
+        // if (based >= 4){
+        //     based = 0
+        // }
+        //     based++
+        // }
+        // this.distanceW = this.middleX - mouseX
+        // this.distanceH = this.middleY - mouseY
+        // this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
+        //     if(Math.sqrt(this.hypot) < tile_size/2){
+        //         ctx.fillStyle = "rgba(220,20,20,0.1)"
+        //         ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+        //         ctx.fillStyle = "rgba(255,255,255,0.8)"
+        //         activeTile = this
+        // }
 
     }
 
