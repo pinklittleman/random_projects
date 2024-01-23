@@ -4,9 +4,7 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0
-
-let world = []
+let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0, tiles = [], world = []
 
 let trees = {
     1:{oak: []},
@@ -24,7 +22,6 @@ let halfCanvasH = canvas.height/2
 let tile_Y_calculation = 3//Math.floor(canvas.width/tile_size)-2
 let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
 
-let tiles = []
 
 
 // bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
@@ -32,12 +29,14 @@ class Tile{
     constructor(centerX,centerY){
         this.centerX = centerX
         this.centerY = centerY
-        this.dic = {
-            1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
-            2:{x:this.centerX,y:this.centerY-tile_size},
-            3:{x:this.centerX,y:this.centerY},
-            4:{x:this.centerX+tile_size,y:this.centerY},
-        }
+        // this.dic = {
+        //     1:{},
+        //     2:{},
+        //     3:{},
+        //     4:{},
+        // }
+        this.cords = null
+        this.active = true
         this.num = null
         this.maxSeeds = randnum(5)
         this.seeds = []
@@ -51,6 +50,32 @@ class Tile{
     // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
     // might need to migrate this back to the draw loop outside the tile.
     draw() {
+        this.cords = [this.centerX+tile_size,this.centerY-tile_size,this.centerX,this.centerY-tile_size,this.centerX,this.centerY,this.centerX+tile_size,this.centerY]
+        this.num = tiles.indexOf(this)
+        // let based = 2 
+        // for (let i = 0; i < this.cords.length; i++) {
+        //     if (based >= 8){
+        //         based = 0
+        //     }
+            
+        // }
+        if(this.active){
+            ctx.beginPath()
+            ctx.strokeStyle = "rgb(200,10,10)"
+            ctx.lineWidth = 2
+            ctx.moveTo(this.cords[0],this.cords[1])
+            ctx.lineTo(this.cords[2],this.cords[3])
+            ctx.moveTo(this.cords[2],this.cords[3])
+            ctx.lineTo(this.cords[4],this.cords[5])
+            ctx.moveTo(this.cords[4],this.cords[5])
+            ctx.lineTo(this.cords[6],this.cords[7])
+            ctx.moveTo(this.cords[6],this.cords[7])
+            ctx.lineTo(this.cords[7],this.cords[8])
+            ctx.moveTo(this.cords[7],this.cords[8])
+            ctx.lineTo(this.cords[0],this.cords[1])
+            ctx.stroke()
+        }
+
         // this.dic = {
         //     1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
         //     2:{x:this.centerX,y:this.centerY-tile_size},
@@ -58,13 +83,13 @@ class Tile{
         //     4:{x:this.centerX+tile_size,y:this.centerY},
         // }
         // let based = 2
-        // this.num = tiles.indexOf(this)
+        // 
         // for (let i = 1; i < 5; i++) {
         //     for (let j = 0; j < tiles.length; j++) {
         //         ctx.beginPath()
         //         ctx.strokeStyle = "rgb(200,10,10)"
         //         ctx.fillStyle = "rgb(250,250,150)"
-        //         ctx.lineWidth = 2
+        //         
         //         ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
         //         ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
         //         ctx.stroke()
@@ -75,15 +100,15 @@ class Tile{
         // }
         //     based++
         // }
-        // this.distanceW = this.middleX - mouseX
-        // this.distanceH = this.middleY - mouseY
-        // this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
-        //     if(Math.sqrt(this.hypot) < tile_size/2){
-        //         ctx.fillStyle = "rgba(220,20,20,0.1)"
-        //         ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
-        //         ctx.fillStyle = "rgba(255,255,255,0.8)"
-        //         activeTile = this
-        // }
+        this.distanceW = this.middleX - mouseX
+        this.distanceH = this.middleY - mouseY
+        this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
+            if(Math.sqrt(this.hypot) < tile_size/2){
+                ctx.fillStyle = "rgba(220,20,20,0.1)"
+                ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+                ctx.fillStyle = "rgba(255,255,255,0.8)"
+                activeTile = this
+        }
 
     }
 
@@ -155,7 +180,14 @@ canvas.addEventListener("mousemove", event => {
 
 canvas.addEventListener("mousedown", event =>{
     if (activeTile != null) {
-        
+        let tile_num = tiles.indexOf(activeTile)
+        if (tiles[tile_num].active) {
+            tiles[tile_num].active = false
+            
+        }
+        else{
+            tiles[tile_num].active = true
+        }
     }
 
 })
