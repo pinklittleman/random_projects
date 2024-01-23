@@ -4,7 +4,7 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null
+let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0
 
 let world = []
 
@@ -148,9 +148,16 @@ canvas.addEventListener("mousemove", event => {
     mouseY = event.clientY
     if(activeTile != null){
         if(activeTile.seeds.length <= activeTile.maxSeeds){
-            activeTile.seeds.push(new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size)))
+            // activeTile.seeds.push(new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size)))
         }
     }
+})
+
+canvas.addEventListener("mousedown", event =>{
+    if (activeTile != null) {
+        
+    }
+
 })
 
 function increaseTile(){
