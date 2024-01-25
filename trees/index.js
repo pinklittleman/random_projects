@@ -52,13 +52,6 @@ class Tile{
     draw() {
         this.cords = [this.centerX+tile_size,this.centerY-tile_size,this.centerX,this.centerY-tile_size,this.centerX,this.centerY,this.centerX+tile_size,this.centerY]
         this.num = tiles.indexOf(this)
-        // let based = 2 
-        // for (let i = 0; i < this.cords.length; i++) {
-        //     if (based >= 8){
-        //         based = 0
-        //     }
-            
-        // }
         if(this.active){
             ctx.beginPath()
             ctx.strokeStyle = "rgb(200,10,10)"
@@ -75,31 +68,6 @@ class Tile{
             ctx.lineTo(this.cords[0],this.cords[1])
             ctx.stroke()
         }
-
-        // this.dic = {
-        //     1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
-        //     2:{x:this.centerX,y:this.centerY-tile_size},
-        //     3:{x:this.centerX,y:this.centerY},
-        //     4:{x:this.centerX+tile_size,y:this.centerY},
-        // }
-        // let based = 2
-        // 
-        // for (let i = 1; i < 5; i++) {
-        //     for (let j = 0; j < tiles.length; j++) {
-        //         ctx.beginPath()
-        //         ctx.strokeStyle = "rgb(200,10,10)"
-        //         ctx.fillStyle = "rgb(250,250,150)"
-        //         
-        //         ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
-        //         ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
-        //         ctx.stroke()
-        //         // ctx.fillText(`${this.num}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
-        //     }
-        // if (based >= 4){
-        //     based = 0
-        // }
-        //     based++
-        // }
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
