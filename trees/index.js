@@ -26,19 +26,15 @@ let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
 
 // bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
 class Tile{
-    constructor(centerX,centerY){
+    constructor(centerX,centerY, Xnum, Ynum){
         this.centerX = centerX
         this.centerY = centerY
-        // this.dic = {
-        //     1:{},
-        //     2:{},
-        //     3:{},
-        //     4:{},
-        // }
+        this.Xnum = Xnum
+        this.Ynum = Ynum
         this.cords = null
         this.active = true
-        this.num = null
-        this.maxSeeds = randnum(5)
+        this.num = this.Xnum+this.Ynum
+        this.maxSeeds = randnum(15)
         this.seeds = []
         this.middleX = centerX+tile_size/2
         this.middleY = centerY-tile_size/2
@@ -47,18 +43,13 @@ class Tile{
         this.hypot = null
         tiles.push(this)
     }
-    // might find a better way to draw the tiles to the screen. At the moment we a calling 3^3 loops,
-    // might need to migrate this back to the draw loop outside the tile.
     draw() {
+        this.middleX = this.centerX+tile_size/2
+        this.middleY = this.centerY-tile_size/2
+        this.centerX = (this.Xnum*tile_size)+left_X_ajustment
+        this.centerY = (this.Ynum*tile_size+tile_size)+left_Y_ajustment
         this.cords = [this.centerX+tile_size,this.centerY-tile_size,this.centerX,this.centerY-tile_size,this.centerX,this.centerY,this.centerX+tile_size,this.centerY]
         this.num = tiles.indexOf(this)
-        // let based = 2 
-        // for (let i = 0; i < this.cords.length; i++) {
-        //     if (based >= 8){
-        //         based = 0
-        //     }
-            
-        // }
         if(this.active){
             ctx.beginPath()
             ctx.strokeStyle = "rgb(200,10,10)"
@@ -75,34 +66,11 @@ class Tile{
             ctx.lineTo(this.cords[0],this.cords[1])
             ctx.stroke()
         }
-
-        // this.dic = {
-        //     1:{x:this.centerX+tile_size,y:this.centerY-tile_size},
-        //     2:{x:this.centerX,y:this.centerY-tile_size},
-        //     3:{x:this.centerX,y:this.centerY},
-        //     4:{x:this.centerX+tile_size,y:this.centerY},
-        // }
-        // let based = 2
-        // 
-        // for (let i = 1; i < 5; i++) {
-        //     for (let j = 0; j < tiles.length; j++) {
-        //         ctx.beginPath()
-        //         ctx.strokeStyle = "rgb(200,10,10)"
-        //         ctx.fillStyle = "rgb(250,250,150)"
-        //         
-        //         ctx.moveTo(tiles[j].dic[i].x,tiles[j].dic[i].y)
-        //         ctx.lineTo(tiles[j].dic[based].x,tiles[j].dic[based].y)
-        //         ctx.stroke()
-        //         // ctx.fillText(`${this.num}`,tiles[j].dic[i].x+tiles[j].RX,tiles[j].dic[i].y-tiles[j].RY)
-        //     }
-        // if (based >= 4){
-        //     based = 0
-        // }
-        //     based++
-        // }
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
+        ctx.fillText(`${Math.sqrt(this.hypot)}`, this.middleX,this.middleY)
+
             if(Math.sqrt(this.hypot) < tile_size/2){
                 ctx.fillStyle = "rgba(220,20,20,0.1)"
                 ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
@@ -136,12 +104,14 @@ class seed{
 
 for (let y = 0; y < tile_Y_calculation; y++) {
    for (let x = 0; x < tile_X_calculation; x++) {
-        new Tile((x*tile_size)+left_X_ajustment,(y*tile_size+tile_size)+left_Y_ajustment)
+        new Tile((x*tile_size)+left_X_ajustment,(y*tile_size+tile_size)+left_Y_ajustment, x,y)
    }
 }
-
 function mainLoop(){
     ctx.clearRect(0,0,canvas.width,canvas.height)
+    ctx.moveTo(canvas.width/2,0)
+    ctx.lineTo(canvas.width/2,canvas.height)
+    ctx.stroke()
 
     // this draws the seeds in the world
     world.forEach(item => {
@@ -151,10 +121,9 @@ function mainLoop(){
         }, 1000*randnum(200));
     });
 
-    // this is just brain damage, calling a foreach loop wich feeds into two more for loops
     tiles.forEach(tile =>{
         tile.draw()
-        ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
+        // ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
     })
 
     requestAnimationFrame(mainLoop)
@@ -171,29 +140,39 @@ function randnum(num){
 canvas.addEventListener("mousemove", event => {
     mouseX = event.clientX
     mouseY = event.clientY
-    if(activeTile != null){
-        if(activeTile.seeds.length <= activeTile.maxSeeds){
-            // activeTile.seeds.push(new seed(activeTile.middleX-tile_size/2+randnum(tile_size), activeTile.middleY-tile_size/2+randnum(tile_size)))
-        }
-    }
 })
 
 canvas.addEventListener("mousedown", event =>{
     if (activeTile != null) {
-        let tile_num = tiles.indexOf(activeTile)
-        if (tiles[tile_num].active) {
-            tiles[tile_num].active = false
+        // let tile_num = tiles.indexOf(activeTile)
+        // if (tiles[tile_num].active) {
+        //     tiles[tile_num].active = false
             
-        }
-        else{
-            tiles[tile_num].active = true
-        }
+        // }
+        // else{
+        //     tiles[tile_num].active = true
+        // }
+        increaseTile()
     }
 
 })
 
 function increaseTile(){
-    tile_size++
+    if(tile_size >= 290){
+        return
+    }
+    let sizeInc = setInterval(() => {
+        tile_size++
+        // left_X_ajustment++
+        if (tile_size >= 290) {
+            clearInterval(sizeInc)
+            tiles.forEach(tile => {
+                if(activeTile != tile){
+                    tile.active = false
+                }
+            });
+        }
+    }, 290/60);
 }
 
 window.addEventListener("resize", event => {
