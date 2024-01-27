@@ -69,7 +69,7 @@ class Tile{
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
-        ctx.fillText(`${Math.sqrt(this.hypot)}`, this.middleX,this.middleY)
+        ctx.fillText(`${this.num}`, this.middleX,this.middleY)
 
             if(Math.sqrt(this.hypot) < tile_size/2){
                 ctx.fillStyle = "rgba(220,20,20,0.1)"
