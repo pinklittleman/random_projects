@@ -4,7 +4,7 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0, tiles = [], world = []
+let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0, tiles = [], world = [], tile_num, clicked_tile, middleOffsetW, middleOffsetH, oldLeftAjust
 
 let trees = {
     1:{oak: []},
@@ -12,6 +12,7 @@ let trees = {
     3:{sycamore: []},
     4:{Hchestnut: []}
 }
+
 
 // holy moly that was simpler than I thought it would be, turns out you should times the X calc by the tile size not 10 
 let halfCanvasW = canvas.width/2
@@ -21,6 +22,9 @@ let left_X_ajustment = halfCanvasW-tile_X_calculation/2*tile_size
 let halfCanvasH = canvas.height/2
 let tile_Y_calculation = 3//Math.floor(canvas.width/tile_size)-2
 let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
+
+oldLeftAjust = left_X_ajustment
+
 
 // bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
 class Tile{
@@ -39,6 +43,8 @@ class Tile{
         this.distanceW = null
         this.distanceH = null
         this.hypot = null
+        this.enlarged = false
+        this.changing = false
         tiles.push(this)
     }
     draw() {
@@ -66,14 +72,15 @@ class Tile{
         }
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
-        this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
+        ctx.fillStyle = "rgb(200,200,20)"
         ctx.fillText(`${this.num}`, this.middleX,this.middleY)
-        if(Math.sqrt(this.hypot) < tile_size/2){
-            ctx.fillStyle = "rgba(220,20,20,0.1)"
-            ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
-            ctx.fillStyle = "rgba(255,255,255,0.8)"
-            activeTile = this
+        if(this.enlarged){
+            // console.log("based.win")
+            middleOffsetW = halfCanvasW - this.middleX 
+            middleOffsetH = halfCanvasH - this.middleY
         }
+        
+
     }
 }
 
@@ -102,7 +109,9 @@ for (let y = 0; y < tile_Y_calculation; y++) {
         new Tile((x*tile_size)+left_X_ajustment,(y*tile_size+tile_size)+left_Y_ajustment, x,y)
    }
 }
+
 function mainLoop(){
+    tile_num = tiles.indexOf(activeTile)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     ctx.moveTo(canvas.width/2,0)
     ctx.lineTo(canvas.width/2,canvas.height)
@@ -135,39 +144,84 @@ function randnum(num){
 canvas.addEventListener("mousemove", event => {
     mouseX = event.clientX
     mouseY = event.clientY
+    tiles.forEach(tile => {
+        tile.hypot = Math.round(Math.hypot(tile.distanceH**2, tile.distanceW**2))
+    });
 })
 
 canvas.addEventListener("mousedown", event =>{
-    if (activeTile != null) {
-        // let tile_num = tiles.indexOf(activeTile)
-        // if (tiles[tile_num].active) {
-        //     tiles[tile_num].active = false
-            
-        // }
-        // else{
-        //     tiles[tile_num].active = true
-        // }
-        increaseTile()
-    }
+    tiles.forEach(tile => {
+        if(Math.sqrt(tile.hypot) < tile_size/2){
+            activeTile = tile
+        }
+    });
+    setTimeout(() => {
+        if (activeTile != null) {
+            if(tiles[tile_num].changing == false){
+                if(tiles[tile_num].enlarged){
+                    decreaseTile()
+                }
+                else{
+                    increaseTile()
+                }
+                
+            }
+        }
+    }, 20);
 
 })
 
+
 function increaseTile(){
+    if(tiles[tile_num].changing){
+        return
+    }
     if(tile_size >= 290){
         return
     }
     let sizeInc = setInterval(() => {
+        tiles[tile_num].changing = true
         tile_size++
         // left_X_ajustment++
         if (tile_size >= 290) {
             clearInterval(sizeInc)
             tiles.forEach(tile => {
+                tile.changing = false
                 if(activeTile != tile){
                     tile.active = false
                 }
             });
+        
+            left_X_ajustment += middleOffsetW
+            
         }
     }, 290/60);
+    tiles[tile_num].enlarged = true
+}
+
+function decreaseTile(){
+    if(tiles[tile_num].changing){
+        return
+    }
+    if(tile_size <= 120){
+        return
+    }
+    let sizeDec = setInterval(() => {
+        tiles[tile_num].changing = true
+        tile_size--
+        // left_X_ajustment++
+        if (tile_size <= 120) {
+            clearInterval(sizeDec)
+            tiles.forEach(tile => {
+                tile.changing = false
+                if(activeTile != tile){
+                    tile.active = true
+                }
+            });
+            left_X_ajustment = oldLeftAjust
+        }
+    }, 290/60);
+    tiles[tile_num].enlarged = false
 }
 
 window.addEventListener("resize", event => {
