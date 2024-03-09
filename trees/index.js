@@ -22,8 +22,6 @@ let halfCanvasH = canvas.height/2
 let tile_Y_calculation = 3//Math.floor(canvas.width/tile_size)-2
 let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
 
-
-
 // bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
 class Tile{
     constructor(centerX,centerY, Xnum, Ynum){
@@ -70,16 +68,13 @@ class Tile{
         this.distanceH = this.middleY - mouseY
         this.hypot = Math.round(Math.hypot(this.distanceH**2, this.distanceW**2))
         ctx.fillText(`${this.num}`, this.middleX,this.middleY)
-
-            if(Math.sqrt(this.hypot) < tile_size/2){
-                ctx.fillStyle = "rgba(220,20,20,0.1)"
-                ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
-                ctx.fillStyle = "rgba(255,255,255,0.8)"
-                activeTile = this
+        if(Math.sqrt(this.hypot) < tile_size/2){
+            ctx.fillStyle = "rgba(220,20,20,0.1)"
+            ctx.fillRect(this.middleX-tile_size/2,this.middleY-tile_size/2,tile_size,tile_size)
+            ctx.fillStyle = "rgba(255,255,255,0.8)"
+            activeTile = this
         }
-
     }
-
 }
 
 // creates a small 1x1 pixel for seeds that will come later
