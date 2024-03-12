@@ -4,7 +4,8 @@ let ctx = canvas.getContext("2d")
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0, tiles = [], world = [], tile_num, clicked_tile, middleOffsetW, middleOffsetH, oldLeftAjust
+let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0,
+ tiles = [], world = [], active_Tile_Num, clicked_tile, middleOffsetW, middleOffsetH, oldLeftAjust
 
 let trees = {
     1:{oak: []},
@@ -28,9 +29,9 @@ oldLeftAjust = left_X_ajustment
 
 // bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
 class Tile{
-    constructor(centerX,centerY, Xnum, Ynum){
-        this.centerX = centerX
-        this.centerY = centerY
+    constructor(startX,startY, Xnum, Ynum){
+        this.startX = startX
+        this.startY = startY
         this.Xnum = Xnum
         this.Ynum = Ynum
         this.cords = null
@@ -38,8 +39,8 @@ class Tile{
         this.num = this.Xnum+this.Ynum
         this.maxSeeds = randnum(15)
         this.seeds = []
-        this.middleX = centerX+tile_size/2
-        this.middleY = centerY-tile_size/2
+        this.middleX = startX+tile_size/2
+        this.middleY = startY-tile_size/2
         this.distanceW = null
         this.distanceH = null
         this.hypot = null
@@ -48,11 +49,11 @@ class Tile{
         tiles.push(this)
     }
     draw() {
-        this.middleX = this.centerX+tile_size/2
-        this.middleY = this.centerY-tile_size/2
-        this.centerX = (this.Xnum*tile_size)+left_X_ajustment
-        this.centerY = (this.Ynum*tile_size+tile_size)+left_Y_ajustment
-        this.cords = [this.centerX+tile_size,this.centerY-tile_size,this.centerX,this.centerY-tile_size,this.centerX,this.centerY,this.centerX+tile_size,this.centerY]
+        this.middleX = this.startX+tile_size/2
+        this.middleY = this.startY-tile_size/2
+        this.startX = (this.Xnum*tile_size)+left_X_ajustment
+        this.startY = (this.Ynum*tile_size+tile_size)+left_Y_ajustment
+        this.cords = [this.startX+tile_size,this.startY-tile_size,this.startX,this.startY-tile_size,this.startX,this.startY,this.startX+tile_size,this.startY]
         this.num = tiles.indexOf(this)
         if(this.active){
             ctx.beginPath()
@@ -73,9 +74,8 @@ class Tile{
         this.distanceW = this.middleX - mouseX
         this.distanceH = this.middleY - mouseY
         ctx.fillStyle = "rgb(200,200,20)"
-        ctx.fillText(`${this.num}`, this.middleX,this.middleY)
+        ctx.fillText(`${this.changing}`, this.middleX,this.middleY)
         if(this.enlarged){
-            // console.log("based.win")
             middleOffsetW = halfCanvasW - this.middleX 
             middleOffsetH = halfCanvasH - this.middleY
         }
@@ -111,23 +111,23 @@ for (let y = 0; y < tile_Y_calculation; y++) {
 }
 
 function mainLoop(){
-    tile_num = tiles.indexOf(activeTile)
+    active_Tile_Num = tiles.indexOf(activeTile)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     ctx.moveTo(canvas.width/2,0)
     ctx.lineTo(canvas.width/2,canvas.height)
     ctx.stroke()
 
     // this draws the seeds in the world
-    world.forEach(item => {
-        item.draw()
-        setTimeout(() => {
-            item.age++
-        }, 1000*randnum(200));
-    });
+    // world.forEach(item => {
+    //     item.draw()
+    //     setTimeout(() => {
+    //         item.age++
+    //     }, 1000*randnum(200));
+    // });
 
     tiles.forEach(tile =>{
         tile.draw()
-        // ctx.fillText(`${tile.num}`,tile.centerX+tile_size/2,tile.centerY-tile_size/2)
+        // ctx.fillText(`${tile.num}`,tile.startX+tile_size/2,tile.startY-tile_size/2)
     })
 
     requestAnimationFrame(mainLoop)
@@ -155,34 +155,30 @@ canvas.addEventListener("mousedown", event =>{
             activeTile = tile
         }
     });
-    setTimeout(() => {
-        if (activeTile != null) {
-            if(tiles[tile_num].changing == false){
-                if(tiles[tile_num].enlarged){
-                    decreaseTile()
-                }
-                else{
-                    increaseTile()
-                }
-                
+
+    if (activeTile != null) {
+        if(tiles[active_Tile_Num].changing == false){
+            if(tiles[active_Tile_Num].enlarged){
+                decreaseTile()
+            }
+            else{
+                increaseTile()
             }
         }
-    }, 20);
-
+    }
 })
 
-
 function increaseTile(){
-    if(tiles[tile_num].changing){
+    if(tiles[active_Tile_Num].changing){
         return
     }
     if(tile_size >= 290){
         return
     }
     let sizeInc = setInterval(() => {
-        tiles[tile_num].changing = true
+        tiles[active_Tile_Num].changing = true
         tile_size++
-        // left_X_ajustment++
+        left_X_ajustment+=0.2
         if (tile_size >= 290) {
             clearInterval(sizeInc)
             tiles.forEach(tile => {
@@ -196,20 +192,21 @@ function increaseTile(){
             
         }
     }, 290/60);
-    tiles[tile_num].enlarged = true
+    tiles[active_Tile_Num].enlarged = true
 }
 
 function decreaseTile(){
-    if(tiles[tile_num].changing){
+    if(tiles[active_Tile_Num].changing){
         return
     }
     if(tile_size <= 120){
         return
     }
     let sizeDec = setInterval(() => {
-        tiles[tile_num].changing = true
+        tiles[active_Tile_Num].changing = true
         tile_size--
-        // left_X_ajustment++
+        left_X_ajustment-=0.2
+        left_Y_ajustment-=0.2
         if (tile_size <= 120) {
             clearInterval(sizeDec)
             tiles.forEach(tile => {
@@ -221,7 +218,7 @@ function decreaseTile(){
             left_X_ajustment = oldLeftAjust
         }
     }, 290/60);
-    tiles[tile_num].enlarged = false
+    tiles[active_Tile_Num].enlarged = false
 }
 
 window.addEventListener("resize", event => {
