@@ -27,7 +27,7 @@ let left_Y_ajustment = halfCanvasH-tile_X_calculation/2*tile_size
 oldLeftAjust = left_X_ajustment
 
 
-// bit of a mess but basically generates a 4 sided tile based of x and y coordinates 
+// bit of a mess but basically generates a 4 sided tile based off x and y coordinates 
 class Tile{
     constructor(startX,startY, Xnum, Ynum){
         this.startX = startX
