@@ -21,7 +21,7 @@ class Point{
 }
 
 for (let i = 0; i < 60; i++) {
-    new Point(randnum(canvas.width), 10, 1)
+    new Point(randnum(canvas.width), 1, 1)
 }
 
 
