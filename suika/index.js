@@ -6,7 +6,6 @@ canvas.height = innerHeight
 
 let Items = []
 
-
 function randnum(num){
     let ran = Math.floor(Math.random()*num)
     if (ran == 0){
