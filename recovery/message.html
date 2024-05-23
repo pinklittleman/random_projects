@@ -1,0 +1,348 @@
+<body onkeydown="myFunction(event)"></body>
+<h2 id="message2"></h2>
+
+<button onclick="stopping()" id="stoping">stop</button>
+
+<img id="cassette" src="cassette.png">
+
+<audio id='audio2' autoplay> 
+        <!-- used to be https://pinky.uk.to/websockets/Ominus Drone.mp3 -->
+        <source src="Ominus Drone.mp3" type="audio/mpeg">
+    </audio> 
+    
+<audio id="audio1">
+    <source src="Cassette Cue No.1.mp3" type="audio/mpeg"> 
+</audio>    
+    
+<style>
+
+#cassette{
+    display: none;
+    position: absolute;
+}
+
+#audio{
+    display:block;
+}
+
+body{
+    background-color: rgb(92, 92, 92);
+}
+
+canvas{
+    float: left;
+}
+
+#users{
+    text-align: center;
+}
+
+.insideusr{
+    text-align: center;
+    background-color: rgb(95, 247, 255);
+}
+
+.users{
+    background-color: rgb(160, 250, 255);
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    float: right;
+    width: 200px;
+    margin: 0%;
+    padding: 0px;
+}
+
+.users p.active{
+    background-color: hsl(192, 100%, 46%)
+}
+.users p{
+    margin: 0%;
+}
+
+.ids{
+    background-color: rgb(247, 181, 181);
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    float: right;
+    width: 250px;
+    margin-right: 20px;
+    text-align: center;
+    padding:0%;
+}
+
+.ids p.active{
+    background-color: hsl(0, 100%, 73%)
+}
+
+.ids p{
+    margin: 0%;
+}
+
+.container{
+    float: right;
+    padding-right: 100px;
+    padding-left: 20px;
+    margin: 0%;
+}
+
+.vertical-menu {
+  width: 220px;
+}
+
+.vertical-menu p {
+  background-color: #b0ffd1;
+  color: black;
+  display: block;
+  padding: 1px;
+  text-decoration: none;
+  text-align: center;
+  margin: 0%;
+}
+
+#message2{
+    position: absolute;
+    font-size: small;
+    color: #d8d8d8;
+}
+
+.vertical-menu p.active{
+    background-color: #2bff83;
+}
+
+.brush{
+    background-color: black;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    color: #2bff83;
+    text-align: center;
+}
+
+</style>
+
+<p>CURRENTLY BROKEN COME BACK SOON MAYBE</p>
+
+<div class="container">
+    <div class="vertical-menu">
+        <p class="active">Users:</p>
+        <p id="list1">1</p>
+        <p id="list2">2</p>
+        <p id="list3">3</p>
+        <p id="list4">4</p>
+    </div>
+</div>
+
+<div>
+    <p></p>
+</div>
+
+<div>
+    <p></p>
+</div>
+
+<div class="users">
+    <p class="insideusr">current users:</p>
+    <p id="users">null</p>
+</div>
+
+<div class="ids">
+    <p class="active">Current socket ID:</p>
+    <p id="ID"></p>
+</div>
+
+<div id="xy" class="xy">
+yes
+</div>
+<div id="xyz" class="xy">
+    yes
+</div>
+<div id="xyzu" class="xy">
+    yes
+</div>
+<div id="testing">test</div>
+
+<div class="brush">iro.js</div>
+
+<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+<script src="https://pinky.uk.to/websockets/p5.min.js"></script>
+<script>
+
+
+dragElement(document.getElementById("cassette"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "cassette")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "cassette").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    console.log('x'+e.clientX)
+    console.log('y'+e.clientY)
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+// new code 
+
+//old and defective 
+// function move(){
+//     x = mouseX
+//     y = mouseY
+
+//     var element = document.getElementById('cassette')
+//     element.style.left = x + 1 + "px";
+//     element.style.top = y + 1 + "px";
+
+// }
+
+var sample = document.getElementById("audio2");
+var sample2 = document.getElementById('audio1')
+//light switch new page
+function stopping(){
+    sample.pause()
+    sample2.play()
+    sample2.volume = 1.0
+    document.getElementById('cassette').style.display = 'inline'
+    setTimeout(() => {
+        sample.play()
+    }, 6000);
+}
+
+//listen for the socket on port 5000
+socket = io.connect('http://pinky.uk.to:5000')
+//when the socket recives 'hello' from the server the executes the function newinstance
+socket.on('hello', newinstance)
+socket.on('newcords', newdraw)
+socket.on('userarray', lengtharr)
+socket.on('userarrayimp', users)
+socket.on('ID', getsocid)
+//just log the data from the server
+
+var test = []
+let user = []
+let temp
+var num1
+var num2
+var num3
+var num4
+
+
+function getsocid(data){
+    document.getElementById('ID').innerHTML = data
+}
+
+function users(data){
+    user = data
+    // console.log(user)
+    var num1 = user.slice(0,1)
+    var num2 = user.slice(1,2)
+    var num3 = user.slice(2,3)
+    var num4 = user.slice(3,4)
+    // console.log('num1: '+num1)
+    document.getElementById('list1').innerHTML = num1
+    document.getElementById('list2').innerHTML = num2
+    document.getElementById('list3').innerHTML = num3
+    document.getElementById('list4').innerHTML = num4
+}
+
+function lengtharr(data){
+    // console.log(data)
+    document.getElementById('users').innerHTML = data
+}
+
+function newinstance(data){
+    console.log(data)
+}
+//setup the canvas with borders and size
+function setup(){
+    createCanvas(800,600)
+    background(50)
+}
+// when the mouse is dragged across the screen get the x and y cords
+function mouseDragged(){
+    let data2 = {
+        x: mouseX,
+        y: mouseY,
+        id: socket.id,
+    }
+    // send the cords to the server 
+    socket.emit('cordinates', data2)
+    // setTimeout(() => {
+    //     console.log(data2)
+    // }, 2000);
+    test.push(data2)
+    noStroke()
+    fill(2,255,0)
+    ellipse(data2.x,data2.y,20,20)
+    document.getElementById('testing').innerHTML = test[test.length - 1].x
+    document.getElementById('testing').innerHTML = test[test.length - 1].y
+}
+
+function newdraw(data){
+    noStroke()
+    fill(255,255,0)
+    ellipse(data.x,data.y,20,20)
+    test.push(data)
+    // setTimeout(() => {
+    //     console.log(data)
+    // }, 2000);
+    // console.log('x: '+data.x)
+    // console.log('y: '+data.y)
+    var element = document.getElementById('message2')
+    element.style.left = data.x + 1 + "px";
+    element.style.top = data.y + 1 + "px";
+    document.getElementById('message2').innerHTML = data.id
+    document.getElementById('xy').innerHTML = test[test.length - 1].id
+    document.getElementById('xyz').innerHTML = test[test.length - 1].x
+    document.getElementById('xyzu').innerHTML = test[test.length - 1].y
+    // if(test[test.length - 1].id != num1){
+        document.getElementById('testing').innerHTML = test[test.length - 1].x
+        document.getElementById('testing').innerHTML = test[test.length - 1].y
+    // }
+}
+
+
+function myFunction(event){
+    if(event.key === " "){
+        console.log('pressed')
+        console.log('<body>hello</body>')
+    }
+}
+
+</script>
