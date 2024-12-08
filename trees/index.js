@@ -170,7 +170,7 @@ canvas.addEventListener("mousedown", event =>{
 
 function increaseTile(){
     if(tiles[active_Tile_Num].changing){
-        return
+        return 0
     }
     if(tile_size >= 290){
         return
@@ -192,6 +192,7 @@ function increaseTile(){
             
         }
     }, 290/60);
+    // need to make devisable by screen refresh rate not hard coded 
     tiles[active_Tile_Num].enlarged = true
 }
 
