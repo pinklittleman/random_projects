@@ -21,9 +21,9 @@ class square{
     }
     draw(){
         ctx.fillStyle = "white"
-        ctx.strokeStyle = "red"
+        ctx.strokeStyle = "white"
         if (this.collision) {
-            ctx.strokeStyle = "blue"
+            ctx.strokeStyle = "grey"
         }
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
@@ -34,6 +34,7 @@ class square{
         ctx.closePath(); // Close the square path
         ctx.lineWidth = 10;
         ctx.stroke();
+        // ctx.fillText(``)
     }
     collisioncheck(){
         this.centerP = {x:(this.ow/2)+this.x,y:(this.oh/2)+this.y}
@@ -68,6 +69,7 @@ class square{
                 if(this.playersDist.length > players.length-2){
                     this.playersDist = []
                 }
+                h<25 ? p.collision = true : p.collision = false
                 this.playersDist.push({id:players.indexOf(p), hypot:h})
 
             }
