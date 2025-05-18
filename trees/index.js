@@ -5,7 +5,7 @@ canvas.width = innerWidth
 canvas.height = innerHeight
 
 let tile_size = 120, mouseX = 0, mouseY = 0, activeTile = null, mouseDownX = 0, mousedownY = 0,
- tiles = [], world = [], active_Tile_Num, clicked_tile, middleOffsetW, middleOffsetH, oldLeftAjust
+tiles = [], world = [], active_Tile_Num, clicked_tile, middleOffsetW, middleOffsetH, oldLeftAjust
 
 let trees = {
     1:{oak: []},
@@ -113,9 +113,9 @@ for (let y = 0; y < tile_Y_calculation; y++) {
 function mainLoop(){
     active_Tile_Num = tiles.indexOf(activeTile)
     ctx.clearRect(0,0,canvas.width,canvas.height)
-    ctx.moveTo(canvas.width/2,0)
-    ctx.lineTo(canvas.width/2,canvas.height)
-    ctx.stroke()
+    // ctx.moveTo(canvas.width/2,0)
+    // ctx.lineTo(canvas.width/2,canvas.height)
+    // ctx.stroke()
 
     // this draws the seeds in the world
     // world.forEach(item => {

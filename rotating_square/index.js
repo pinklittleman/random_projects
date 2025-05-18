@@ -36,13 +36,24 @@ class Square{
         this.angle += dlt;
         if (this.angle >= 360){ this.angle -= 360};
     }
+    // rotatePoint(x, y, centerX, centerY, angle) {
+    //     let radians = angle * Math.PI / 180;
+    //     let cos = Math.cos(radians);
+    //     let sin = Math.sin(radians);
+    //     let nx = (cos * (x - centerX)) + (sin * (y - centerY)) + centerX;
+    //     let ny = (cos * (y - centerY)) - (sin * (x - centerX)) + centerY;
+    //     return { x: nx, y: ny };
+    // }
     rotatePoint(x, y, centerX, centerY, angle) {
-        let radians = angle * Math.PI / 180;
-        let cos = Math.cos(radians);
-        let sin = Math.sin(radians);
-        let nx = (cos * (x - centerX)) + (sin * (y - centerY)) + centerX;
-        let ny = (cos * (y - centerY)) - (sin * (x - centerX)) + centerY;
-        return { x: nx, y: ny };
+        // Convert angle from degrees to radians if necessary
+        let rad = Math.PI * (angle / 180);
+        let cosRad = Math.cos(rad);
+        let sinRad = Math.sin(rad);
+    
+        return {
+            x: centerX + (x - centerX) * cosRad + (y - centerY) * sinRad,
+            y: centerY + (x - centerX) * sinRad - (y - centerY) * cosRad
+        };
     }
 }
 
